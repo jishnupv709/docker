@@ -1,0 +1,25 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: nest-mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+    volumes:
+      - mongo-data:/data/db
+
+  api:
+    build: .
+    container_name: nest-api
+    ports:
+      - "7860:7860"
+    environment:
+      PORT: 7860
+      MONGODB_URI: mongodb+srv://appuser:appuser123@cluster0.okgrxz8.mongodb.net/nestapp?retryWrites=true&w=majority&appName=Cluster0 #mongodb://admin:admin123@mongo:27017/nestapp?authSource=admin
+    depends_on:
+      - mongo
+
+volumes:
+  mongo-data:
