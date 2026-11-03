@@ -20,22 +20,41 @@ export class App implements OnInit {
   }
 
   loadItems() {
-    this.http.get<any[]>('/items').subscribe((d) => (this.items = d));
+    this.http.get<any[]>('/items').subscribe({
+      next: (data) => {
+        this.items = data;
+        console.log('Items loaded:', this.items); // Helpful for debugging
+      },
+      error: (err) => console.error('Error loading items:', err)
+    });
   }
 
   addItem() {
-    if (!this.newItemName) return;
+    if (!this.newItemName.trim()) return; // Prevent empty strings
+    
     const payload = { name: this.newItemName, description: this.newItemDesc };
-    this.http.post('/items', payload).subscribe(() => {
-      this.newItemName = '';
-      this.newItemDesc = '';
-      this.loadItems();
+    
+    this.http.post('/items', payload).subscribe({
+      next: (res) => {
+        console.log('Item added successfully:', res);
+        // Clear the form
+        this.newItemName = '';
+        this.newItemDesc = '';
+        // Instantly reload the list
+        this.loadItems();
+      },
+      error: (err) => console.error('Error adding item:', err)
     });
   }
 
   deleteItem(id: string) {
-    this.http.delete('/items/' + id).subscribe(() => {
-      this.loadItems();
+    this.http.delete('/items/' + id).subscribe({
+      next: () => {
+        console.log('Item deleted successfully');
+        // Instantly reload the list
+        this.loadItems();
+      },
+      error: (err) => console.error('Error deleting item:', err)
     });
   }
 }
