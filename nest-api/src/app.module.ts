@@ -15,8 +15,7 @@ import { ItemsModule } from './items/items.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
       exclude: ['/items*'],
-      // Force it to serve index.html for the root route
-      renderPath: '*', 
+      // REMOVED renderPath: '*'
     }),
   ],
   controllers: [AppController],
