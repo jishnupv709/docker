@@ -1,31 +1,69 @@
+@if (toast.show) {
+  <div class="toast" [ngClass]="toast.type">
+    @if (toast.type === 'success') { <span>✓</span> } 
+    @else { <span>✕</span> }
+    {{ toast.message }}
+  </div>
+}
+
 <div class="container">
-  <h1>🐳 Full-Stack Docker App</h1>
-  <p class="subtitle">NestJS + Angular + MongoDB on Render</p>
+  <header class="header">
+    <h1>🐳 Full-Stack Docker App</h1>
+    <p>NestJS + Angular + MongoDB on Render</p>
+  </header>
 
   <!-- Add Item Form -->
-  <div class="card form-group">
-    <input [(ngModel)]="newItemName" placeholder="Item Name" (keyup.enter)="addItem()">
-    <input [(ngModel)]="newItemDesc" placeholder="Description (optional)" (keyup.enter)="addItem()">
-    <button (click)="addItem()">Add Item</button>
+  <div class="card">
+    <div class="form-grid">
+      <div class="input-group">
+        <label>Item Name</label>
+        <input [(ngModel)]="newItemName" placeholder="e.g. Buy groceries" [disabled]="isLoading" (keyup.enter)="addItem()">
+      </div>
+      <div class="input-group">
+        <label>Description</label>
+        <input [(ngModel)]="newItemDesc" placeholder="Optional details" [disabled]="isLoading" (keyup.enter)="addItem()">
+      </div>
+      <div>
+        <button class="btn-primary" (click)="addItem()" [disabled]="isLoading || !newItemName.trim()">
+          {{ isLoading ? 'Adding...' : '+ Add Item' }}
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Items List -->
   <div class="card">
-    <h2>Items List</h2>
-    @if (items.length === 0) {
-      <p class="empty">No items yet. Add one above!</p>
+    <div class="list-header">
+      <h2>Your Items</h2>
+      <span style="font-size: 0.875rem; color: #64748b;">{{ items.length }} total</span>
+    </div>
+    
+    @if (isLoading) {
+      <div class="loader-container">
+        <div class="spinner"></div>
+        <p>Loading items...</p>
+      </div>
     } @else {
-      <ul>
-        @for (item of items; track item._id) {
-          <li>
-            <div>
-              <strong>{{ item.name }}</strong>
-              @if (item.description) { <span>- {{ item.description }}</span> }
-            </div>
-            <button class="delete-btn" (click)="deleteItem(item._id)">Delete</button>
-          </li>
-        }
-      </ul>
+      @if (items.length === 0) {
+        <div class="empty-state">
+          <span style="font-size: 2rem;">📭</span>
+          <p>No items yet. Add one above to get started!</p>
+        </div>
+      } @else {
+        <ul class="item-list">
+          @for (item of items; track item._id) {
+            <li class="item-row">
+              <div class="item-content">
+                <span class="item-name">{{ item.name }}</span>
+                @if (item.description) {
+                  <span class="item-desc">{{ item.description }}</span>
+                }
+              </div>
+              <button class="btn-delete" (click)="deleteItem(item._id)">Delete</button>
+            </li>
+          }
+        </ul>
+      }
     }
   </div>
 </div>
