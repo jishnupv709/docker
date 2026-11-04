@@ -17,7 +17,7 @@
     <div class="form-grid">
       <div class="input-group">
         <label>Item Name</label>
-        <input [(ngModel)]="newItemName" placeholder="e.g. Buy groceries" [disabled]="isLoading" (keyup.enter)="addItem()">
+        <input #itemInput autofocus [(ngModel)]="newItemName" placeholder="e.g. Buy groceries" [disabled]="isLoading" (keyup.enter)="addItem()">
       </div>
       <div class="input-group">
         <label>Description</label>
@@ -35,7 +35,7 @@
   <div class="card">
     <div class="list-header">
       <h2>Your Items</h2>
-      <span style="font-size: 0.875rem; color: #64748b;">{{ items.length }} total</span>
+      <span class="badge">{{ items.length }} items</span>
     </div>
     
     @if (isLoading) {
